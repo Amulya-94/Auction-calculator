@@ -3,91 +3,116 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Auction Calculator</title>
+    <title>Auction Amount Calculator</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 20px;
-            text-align: center;
-            background-color: #e3f2fd;
+            background-color: #e7f3ff; /* Light blue background */
+            margin: 0;
+            padding: 20px;
         }
+
         .container {
-            background: #ffffff;
-            padding: 15px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            max-width: 320px;
+            max-width: 600px;
             margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
-        input, select, button {
-            margin: 8px 0;
-            padding: 8px;
-            font-size: 14px;
+
+        h1 {
+            text-align: center;
+            color: #007bff; /* Blue color for the heading */
+        }
+
+        label {
+            display: block;
+            margin: 10px 0 5px;
+            color: #0056b3; /* Darker blue for labels */
+        }
+
+        input {
             width: 100%;
-            border-radius: 4px;
-            border: 1px solid #90caf9;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #007bff; /* Blue border for inputs */
+            border-radius: 5px;
         }
+
         button {
-            background-color: #1e88e5;
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff; /* Blue button */
             color: white;
             border: none;
+            border-radius: 5px;
             cursor: pointer;
-            font-weight: bold;
         }
+
         button:hover {
-            background-color: #1565c0;
+            background-color: #0056b3; /* Darker blue on hover */
         }
-        .result {
-            margin-top: 15px;
-            font-weight: bold;
-            text-align: left;
-            color: #0d47a1;
-            font-size: 14px;
+
+        .results {
+            margin-top: 20px;
+            display: none;
+        }
+
+        .results p {
+            margin: 5px 0;
+            color: #333; /* Dark text for results */
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h3 style="color: #0d47a1;">Auction Calculator</h3>
-        <label>Total Amount:</label>
-        <input type="number" id="totalAmount" placeholder="Enter total amount" required>
+        <h1>Auction Amount Calculator</h1>
+        <form id="auctionForm">
+            <label for="totalAmount">Enter the Total Amount (e.g., 500000, 600000, 750000, 1000000):</label>
+            <input type="number" id="totalAmount" required>
+            
+            <label for="auctionAmount">Auction Amount:</label>
+            <input type="number" id="auctionAmount" required>
+            
+            <button type="submit">Calculate</button>
+        </form>
         
-        <label>Auction Amount:</label>
-        <select id="auctionAmount" required>
-            <option value="">Select auction amount</option>
-            <option value="500000">500000</option>
-            <option value="100000">600000</option>
-            <option value="200000">1000000</option>
-        </select>
-        
-        <button onclick="calculateValues()">Calculate</button>
-        <div class="result" id="output"></div>
+        <div id="results" class="results">
+            <h2>Results</h2>
+            <p id="agentCommission"></p>
+            <p id="netAmountPayable"></p>
+            <p id="totalDividend"></p>
+            <p id="dividedPerMember"></p>
+            <p id="payableAmountPerPerson"></p>
+        </div>
     </div>
 
     <script>
-        function calculateValues() {
-            let totalAmount = parseFloat(document.getElementById("totalAmount").value);
-            let auctionAmount = parseFloat(document.getElementById("auctionAmount").value);
-            
-            if (isNaN(totalAmount) || totalAmount <= 0 || isNaN(auctionAmount) || auctionAmount <= 0) {
-                document.getElementById("output").innerHTML = "<p style='color: red;'>Please enter valid positive numbers.</p>";
-                return;
-            }
-            
-            let agentCommission = totalAmount * 0.03;
-            let netAmountPayable = totalAmount - auctionAmount;
-            let totalDividend = auctionAmount - agentCommission;
-            let dividedPerMember = totalDividend / 20;
-            let payableAmountPerPerson = 25000 - dividedPerMember;
+        document.getElementById('auctionForm').addEventListener('submit', function(event) {
+            event.preventDefault();
 
-            document.getElementById("output").innerHTML = `
-                <p>Agent Commission: $${agentCommission.toFixed(2)}</p>
-                <p>Net Amount Payable: $${netAmountPayable.toFixed(2)}</p>
-                <p>Total Dividend: $${totalDividend.toFixed(2)}</p>
-                <p>Dividend Per Member: $${dividedPerMember.toFixed(2)}</p>
-                <p>Payable Amount Per Person: $${payableAmountPerPerson.toFixed(2)}</p>
-            `;
-        }
+            // Get input values
+            const totalAmount = parseInt(document.getElementById('totalAmount').value);
+            const auctionAmount = parseInt(document.getElementById('auctionAmount').value);
+
+            // Calculate values
+            const agentCommission = totalAmount * 0.03;
+            const netAmountPayable = totalAmount - auctionAmount;
+            const totalDividend = auctionAmount - agentCommission;
+            const dividedPerMember = Math.floor(totalDividend / 20);
+            const payableAmountPerPerson = 25000 - dividedPerMember;
+
+            // Display results
+            document.getElementById('agentCommission').innerText = `Agent Commission: ${agentCommission}`;
+            document.getElementById('netAmountPayable').innerText = `Net Amount Payable: ${netAmountPayable}`;
+            document.getElementById('totalDividend').innerText = `Total Dividend: ${totalDividend}`;
+            document.getElementById('dividedPerMember').innerText = `Dividend Per Member: ${dividedPerMember}`;
+            document.getElementById('payableAmountPerPerson').innerText = `Payable Amount Per Person: ${payableAmountPerPerson}`;
+
+            // Show results
+            document.getElementById('results').style.display = 'block';
+        });
     </script>
 </body>
 </html>
